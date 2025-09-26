@@ -9,7 +9,9 @@ public class Launch {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+
                 new LoginFrame().setVisible(true);
+                System.out.println("print");
             }
         });
     }
