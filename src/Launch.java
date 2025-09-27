@@ -11,7 +11,6 @@ public class Launch {
             public void run() {
 
                 new LoginFrame().setVisible(true);
-                System.out.println("print");
             }
         });
     }
