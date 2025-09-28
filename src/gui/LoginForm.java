@@ -8,12 +8,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class LoginFrame extends Frame implements ActionListener {
+public class LoginForm extends Frame implements ActionListener {
 
     private JTextField cardNoField;
     private JPasswordField pinField;
 
-    public LoginFrame() {
+    public LoginForm() {
         super("AUTOMATED TELLER MACHINE");
         addGuiComponents();
     }
@@ -79,8 +79,8 @@ public class LoginFrame extends Frame implements ActionListener {
         registerLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                LoginFrame.this.dispose();
-                new RegisterFrame().setVisible(true);
+                LoginForm.this.dispose();
+                new RegisterFormOne().setVisible(true);
             }
         });
         add(registerLabel);
