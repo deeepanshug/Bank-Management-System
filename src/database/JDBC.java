@@ -1,16 +1,21 @@
 package database;
 
+import constants.CommonConstants;
+
+import java.sql.*;
+
 public class JDBC {
 
-//    public boolean validateUser(String cardNo, String pin) {
-//
-//    }
-//
-//    public void register(String username, String password) {
-//
-//    }
-//
-//    public boolean signIn(String cardNo, String pin) {
-//
-//    }
+    private Connection connection;
+    private Statement statement;
+
+    public JDBC() {
+
+        try{
+            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+//            statement = PreparedStatement
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

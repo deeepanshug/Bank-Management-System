@@ -1,4 +1,4 @@
-import gui.LoginFrame;
+import gui.RegisterFormOne;
 
 import javax.swing.*;
 
@@ -10,7 +10,8 @@ public class Launch {
             @Override
             public void run() {
 
-                new LoginFrame().setVisible(true);
+//                new LoginFrame().setVisible(true);
+                new RegisterFormOne().setVisible(true);
             }
         });
     }
