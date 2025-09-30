@@ -7,4 +7,7 @@ public class CommonConstants {
     public static final String db_username = "root";
     public static final String db_password = "hello@123";
     public static final String db_users_table = "";        //Still needs to create a table in mysql
+
+
+    //Test abc
 }
