@@ -9,13 +9,66 @@ public class JDBC {
     private Connection connection;
     private Statement statement;
 
-    public JDBC() {
+//    public JDBC() {
+//
+//        try{
+//            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+//            statement = PreparedStatement
+//        }catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public static boolean register(String accountNo, String name, String fatherName, String dob, String email, String address, String city, String state, String pincode, String gender, String marital) {
 
         try{
-            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
-//            statement = PreparedStatement
-        }catch (SQLException e) {
-            e.printStackTrace();
+            Connection connection = DriverManager.getConnection(CommonConstants.db_URL, CommonConstants.db_username,CommonConstants.db_password);
+            PreparedStatement insertUser = connection.prepareStatement("INSERT INTO "+ CommonConstants.db_users_table+ "(Account_No, Name, Fathers_Name, DOB, Email, Address, City, State, Pincode, Gender, Marital)" +
+             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            );
+
+            insertUser.setString(1,accountNo);
+            insertUser.setString(2,name);
+            insertUser.setString(3,fatherName);
+            insertUser.setString(4,dob);
+            insertUser.setString(5,email);
+            insertUser.setString(6,address);
+            insertUser.setString(7,city);
+            insertUser.setString(8,state);
+            insertUser.setString(9,pincode);
+            insertUser.setString(10,gender);
+            insertUser.setString(11,marital);
+
+            insertUser.executeUpdate();
+            return true;
         }
+        catch(SQLException se) {
+            se.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static boolean checkIfUserExists(String name, String fatherName, String email, String pincode, String gender){
+
+        try{
+            Connection connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+            String query = "SELECT * FROM users WHERE Name = ? AND Fathers_Name = ? AND Email = ? AND Pincode = ? AND Gender = ?";
+            PreparedStatement userCheck = connection.prepareStatement(query);
+            userCheck.setString(1,name);
+            userCheck.setString(2,fatherName);
+            userCheck.setString(3,email);
+            userCheck.setString(4,pincode);
+            userCheck.setString(5,gender);
+
+            ResultSet result = userCheck.executeQuery();
+
+            //Check if the user exists in the resultset or not
+            return result.isBeforeFirst();
+        }
+        catch(SQLException se) {
+            se.printStackTrace();
+        }
+        return false;
     }
 }

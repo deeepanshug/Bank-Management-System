@@ -16,7 +16,7 @@ public class RegisterFormOne extends Frame{
     JRadioButton male,female,married,unmarried;
     JDateChooser dateChooser;
     JButton nextButton;
-    long randomNum;
+    int num = 1;
 
     public RegisterFormOne() {
 
@@ -29,13 +29,12 @@ public class RegisterFormOne extends Frame{
     private void addGuiComponents() {
 
         getContentPane().setBackground(Color.WHITE);
-        randomNum = randomNumber();
 
         //Form label
-        JLabel formNo = new JLabel("Application Form No : " + randomNum);
-        formNo.setBounds(140,20,600,40);
-        formNo.setFont(new Font("Raleway",Font.BOLD,38));
-        add(formNo);
+        JLabel accountNum = new JLabel("Application Account No : " + num);
+        accountNum.setBounds(140,20,600,40);
+        accountNum.setFont(new Font("Raleway",Font.BOLD,38));
+        add(accountNum);
 
         //Personal details label
         JLabel personalDetails = new JLabel("Page one : Personal Details");
@@ -199,7 +198,7 @@ public class RegisterFormOne extends Frame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                String formNo = "" + randomNum;
+                String accountNo = "" + num;
                 String name = nameTextField.getText();
                 String fatherName = fathersNameTextField.getText();
                 String dob = ((JTextField) dateChooser.getDateEditor().getUiComponent()).getText();
@@ -226,14 +225,27 @@ public class RegisterFormOne extends Frame{
                     else if(address.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Address Field cannot be empty.");
                     else if(city.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "City Field cannot be empty.");
                     else if(state.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "State Field cannot be empty.");
-                    else if(pincode.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Pincode Field cannot be empty.");
+                    else if(pincode.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Pin code Field cannot be empty.");
                     else {
 
-                        JDBC connection = new JDBC();
-                        String query = "Insert into signUp values()";   //Continue here
+                        if(!JDBC.checkIfUserExists(name, fatherName, email, pincode, gender)) {
+                            JDBC.register(accountNo,name,fatherName,dob,email,address,city,state,pincode,gender,marital);
+
+                        }
+                        else {
+                            JOptionPane.showMessageDialog(RegisterFormOne.this, "Error: User Already Exists! \n" +
+                                    "Please Login");
+                            RegisterFormOne.this.dispose();
+                            new LoginForm().setVisible(true);
+                        }
 
                         RegisterFormOne.this.dispose();
                         new RegisterFormTwo().setVisible(true);
+
+                        //Register form two
+
+                        //Increment num when registerform two will be submitted or updated successfully.
+                        num++;  //Next user will get new account num
                     }
                 }
                 catch(Exception se) {
@@ -244,11 +256,5 @@ public class RegisterFormOne extends Frame{
         });
         add(nextButton);
 
-    }
-
-    private long randomNumber() {
-
-        Random randomNumber = new Random();
-        return Math.abs((randomNumber.nextLong() % 9000L) + 1000L);
     }
 }
