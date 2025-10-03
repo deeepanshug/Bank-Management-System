@@ -10,7 +10,7 @@ public class JDBC {
     private static PreparedStatement insertUser, userCheck;
 
 
-    public static boolean register(String accountNo, String name, String fatherName, String dob, String email, String address, String city, String state,
+    public static void register(String accountNo, String name, String fatherName, String dob, String email, String address, String city, String state,
                                    String pincode, String gender, String marital, String religion, String category, String income, String education,
                                    String occupation, String panNum, String aadhaar, String senior, String existingAccount) {
 
@@ -43,7 +43,6 @@ public class JDBC {
             insertUser.setString(20,existingAccount);
 
             insertUser.executeUpdate();
-            return true;
         }
         catch(SQLException se) {
             se.printStackTrace();
@@ -56,8 +55,6 @@ public class JDBC {
                 e.printStackTrace();
             }
         }
-
-        return false;
     }
 
     public static boolean checkIfUserExists(String name, String fatherName, String email, String pincode, String gender){
@@ -79,14 +76,6 @@ public class JDBC {
         }
         catch(SQLException se) {
             se.printStackTrace();
-        }
-        finally {
-            try{
-                if(userCheck != null) insertUser.close();
-                if(connection != null) connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return false;
     }
