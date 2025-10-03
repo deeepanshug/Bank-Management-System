@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.Random;
 
 public class RegisterFormOne extends Frame{
 
@@ -16,11 +14,10 @@ public class RegisterFormOne extends Frame{
     JRadioButton male,female,married,unmarried;
     JDateChooser dateChooser;
     JButton nextButton;
-    int num = 1;
 
     public RegisterFormOne() {
 
-        super("AUTOMATED TELLER MACHINE");
+        super("NEW ACCOUNT APPLICATION FORM - PAGE 1");
         setSize(850,800);
         setLocationRelativeTo(null);
         addGuiComponents();
@@ -31,7 +28,7 @@ public class RegisterFormOne extends Frame{
         getContentPane().setBackground(Color.WHITE);
 
         //Form label
-        JLabel accountNum = new JLabel("Application Account No : " + num);
+        JLabel accountNum = new JLabel("Application Account No : " + RegisterFormTwo.num);
         accountNum.setBounds(140,20,600,40);
         accountNum.setFont(new Font("Raleway",Font.BOLD,38));
         add(accountNum);
@@ -198,63 +195,51 @@ public class RegisterFormOne extends Frame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                String accountNo = "" + num;
-                String name = nameTextField.getText();
-                String fatherName = fathersNameTextField.getText();
-                String dob = ((JTextField) dateChooser.getDateEditor().getUiComponent()).getText();
-                String email = emailTextField.getText();
-                String address = addressTextField.getText();
-                String city = cityTextField.getText();
-                String state = stateTextField.getText();
-                String pincode = pincodeTextField.getText();
+                RegisterFormTwo.accountNo = "" + RegisterFormTwo.num;
+                RegisterFormTwo.name = nameTextField.getText();
+                RegisterFormTwo.fatherName = fathersNameTextField.getText();
+                RegisterFormTwo.dob = ((JTextField) dateChooser.getDateEditor().getUiComponent()).getText();
+                RegisterFormTwo.email = emailTextField.getText();
+                RegisterFormTwo.address = addressTextField.getText();
+                RegisterFormTwo.city = cityTextField.getText();
+                RegisterFormTwo.state = stateTextField.getText();
+                RegisterFormTwo.pincode = pincodeTextField.getText();
 
-                String gender = null;
-                if(male.isSelected()) gender = "Male";
-                else gender = "Female";
-
-                String marital = null;
-                if(married.isSelected()) marital = "Married";
-                else marital = "Unmarried";
-
+                if(male.isSelected()) RegisterFormTwo.gender = "Male";
+                else RegisterFormTwo.gender = "Female";
+                if(married.isSelected()) RegisterFormTwo.marital = "Married";
+                else RegisterFormTwo.marital = "Unmarried";
 
                 try{
-                    if(name.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Name Field cannot be empty.");
-                    else if(fatherName.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Father's Name Field cannot be empty.");
-                    else if(dob.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "D.O.B Field cannot be empty.");
-                    else if(email.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Email Field cannot be empty.");
-                    else if(address.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Address Field cannot be empty.");
-                    else if(city.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "City Field cannot be empty.");
-                    else if(state.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "State Field cannot be empty.");
-                    else if(pincode.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Pin code Field cannot be empty.");
+                    if(RegisterFormTwo.name.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Name Field cannot be empty.");
+                    else if(RegisterFormTwo.fatherName.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Father's Name Field cannot be empty.");
+                    else if(RegisterFormTwo.dob.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "D.O.B Field cannot be empty.");
+                    else if(RegisterFormTwo.email.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Email Field cannot be empty.");
+                    else if(RegisterFormTwo.address.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Address Field cannot be empty.");
+                    else if(RegisterFormTwo.city.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "City Field cannot be empty.");
+                    else if(RegisterFormTwo.state.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "State Field cannot be empty.");
+                    else if(RegisterFormTwo.pincode.isEmpty()) JOptionPane.showMessageDialog(RegisterFormOne.this, "Pin code Field cannot be empty.");
                     else {
 
-                        if(!JDBC.checkIfUserExists(name, fatherName, email, pincode, gender)) {
-                            JDBC.register(accountNo,name,fatherName,dob,email,address,city,state,pincode,gender,marital);
+                        if(JDBC.checkIfUserExists(RegisterFormTwo.name, RegisterFormTwo.fatherName, RegisterFormTwo.email, RegisterFormTwo.pincode, RegisterFormTwo.gender)) {
 
-                        }
-                        else {
+                            //If user Exists then no need to continue Just login your existing account.
                             JOptionPane.showMessageDialog(RegisterFormOne.this, "Error: User Already Exists! \n" +
                                     "Please Login");
                             RegisterFormOne.this.dispose();
                             new LoginForm().setVisible(true);
                         }
 
+                        //Register form one filling is done now user will move to form two
                         RegisterFormOne.this.dispose();
                         new RegisterFormTwo().setVisible(true);
-
-                        //Register form two
-
-                        //Increment num when registerform two will be submitted or updated successfully.
-                        num++;  //Next user will get new account num
                     }
                 }
                 catch(Exception se) {
                     se.printStackTrace();
                 }
-
             }
         });
         add(nextButton);
-
     }
 }

@@ -6,25 +6,19 @@ import java.sql.*;
 
 public class JDBC {
 
-    private Connection connection;
-    private Statement statement;
+    private static Connection connection;
+    private static PreparedStatement insertUser, userCheck;
 
-//    public JDBC() {
-//
-//        try{
-//            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
-//            statement = PreparedStatement
-//        }catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
-    public static boolean register(String accountNo, String name, String fatherName, String dob, String email, String address, String city, String state, String pincode, String gender, String marital) {
+    public static boolean register(String accountNo, String name, String fatherName, String dob, String email, String address, String city, String state,
+                                   String pincode, String gender, String marital, String religion, String category, String income, String education,
+                                   String occupation, String panNum, String aadhaar, String senior, String existingAccount) {
 
         try{
-            Connection connection = DriverManager.getConnection(CommonConstants.db_URL, CommonConstants.db_username,CommonConstants.db_password);
-            PreparedStatement insertUser = connection.prepareStatement("INSERT INTO "+ CommonConstants.db_users_table+ "(Account_No, Name, Fathers_Name, DOB, Email, Address, City, State, Pincode, Gender, Marital)" +
-             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            connection = DriverManager.getConnection(CommonConstants.db_URL, CommonConstants.db_username,CommonConstants.db_password);
+            insertUser = connection.prepareStatement("INSERT INTO "+ CommonConstants.db_users_table+ "(Account_No, Name, Fathers_Name, DOB, Email, Address, City, State," +
+                    " Pincode, Gender, Marital, Religion, Category, Income, Education, Occupation, Pan_NO, Aadhaar_NO, Senior, Existing_Account)" +
+             "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
 
             insertUser.setString(1,accountNo);
@@ -38,12 +32,29 @@ public class JDBC {
             insertUser.setString(9,pincode);
             insertUser.setString(10,gender);
             insertUser.setString(11,marital);
+            insertUser.setString(12,religion);
+            insertUser.setString(13,category);
+            insertUser.setString(14,income);
+            insertUser.setString(15,education);
+            insertUser.setString(16,occupation);
+            insertUser.setString(17,panNum);
+            insertUser.setString(18,aadhaar);
+            insertUser.setString(19,senior);
+            insertUser.setString(20,existingAccount);
 
             insertUser.executeUpdate();
             return true;
         }
         catch(SQLException se) {
             se.printStackTrace();
+        }
+        finally {
+            try{
+                if(insertUser != null) insertUser.close();
+                if(connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
         return false;
@@ -52,9 +63,9 @@ public class JDBC {
     public static boolean checkIfUserExists(String name, String fatherName, String email, String pincode, String gender){
 
         try{
-            Connection connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
             String query = "SELECT * FROM users WHERE Name = ? AND Fathers_Name = ? AND Email = ? AND Pincode = ? AND Gender = ?";
-            PreparedStatement userCheck = connection.prepareStatement(query);
+            userCheck = connection.prepareStatement(query);
             userCheck.setString(1,name);
             userCheck.setString(2,fatherName);
             userCheck.setString(3,email);
@@ -68,6 +79,14 @@ public class JDBC {
         }
         catch(SQLException se) {
             se.printStackTrace();
+        }
+        finally {
+            try{
+                if(userCheck != null) insertUser.close();
+                if(connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
