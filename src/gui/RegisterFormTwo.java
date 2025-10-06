@@ -13,14 +13,14 @@ public class RegisterFormTwo extends Frame{
     JTextField aadhaarTextField, panNumTextField;
     JComboBox religionCombo, categoryCombo, incomeCombo, educationalCombo, occupationalCombo;
     JButton submitButton;
-    public static String accountNo, name, fatherName, dob, email, address, city, state, pincode, gender, marital;
     public static String religion, category, income, education, occupation, panNum, aadhaar, senior, existingAccount;
-    public static int num = 1001;
+    String formNum = null;
 
-    public RegisterFormTwo() {
+    public RegisterFormTwo(String formNum) {
         super("NEW ACCOUNT APPLICATION FORM - PAGE 2");
         setSize(850,800);
         setLocationRelativeTo(null);
+        this.formNum = formNum;
         addGuiComponents();
     }
 
@@ -29,7 +29,7 @@ public class RegisterFormTwo extends Frame{
         getContentPane().setBackground(Color.WHITE);
 
         //Form label
-        JLabel formNo = new JLabel("Application Form No : " + num);
+        JLabel formNo = new JLabel("Application Form No : " + formNum);
         formNo.setBounds(140,20,600,40);
         formNo.setFont(new Font("Raleway",Font.BOLD,38));
         add(formNo);
@@ -216,21 +216,16 @@ public class RegisterFormTwo extends Frame{
                     else if(aadhaar.isEmpty()) JOptionPane.showMessageDialog(RegisterFormTwo.this, "Aadhaar Number Field cannot be empty.");
                     else {
 
-                        JDBC.register(accountNo, name, fatherName, dob, email, address, city, state, pincode, gender, marital, religion, category, income, education, occupation, panNum, aadhaar, senior, existingAccount);
+                        JDBC.registerFormTwoDetails(religion, category, income, education, occupation, panNum, aadhaar, senior, existingAccount,formNum);
 
-                        JOptionPane.showMessageDialog(RegisterFormTwo.this, "User Detail registered Successfully \n" +
-                                "Please Login");
+                        JOptionPane.showMessageDialog(RegisterFormTwo.this, "User Detail registered Successfully");
                         RegisterFormTwo.this.dispose();
-                        new LoginForm().setVisible(true);
-
-                        //Increment num is happening when registerform Two will be submitted or updated successfully.
-                        num++;  //Next user will get new account num
+                        new RegisterFormThree(formNum).setVisible(true);
                     }
                 }
                 catch(Exception se) {
                     se.printStackTrace();
                 }
-
             }
         });
         add(submitButton);

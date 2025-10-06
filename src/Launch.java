@@ -1,4 +1,3 @@
-import database.JDBC;
 import gui.LoginForm;
 
 import javax.swing.*;
