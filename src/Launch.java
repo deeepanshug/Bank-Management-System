@@ -1,4 +1,5 @@
 import gui.LoginForm;
+import gui.TransactionsPage;
 
 import javax.swing.*;
 
@@ -11,6 +12,7 @@ public class Launch {
             public void run() {
 
                 new LoginForm().setVisible(true);
+//                new TransactionsPage().setVisible(true);
             }
         });
     }

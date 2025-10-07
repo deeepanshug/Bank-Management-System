@@ -1,5 +1,7 @@
 package gui;
 
+import database.JDBC;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -10,11 +12,11 @@ import java.awt.event.MouseEvent;
 
 public class LoginForm extends Frame implements ActionListener {
 
-    private JTextField cardNoField;
-    private JPasswordField pinField;
+    private JTextField cardNoTextField;
+    private JPasswordField pinTextField;
 
     public LoginForm() {
-        super("AUTOMATED TELLER MACHINE");
+        super("HDFC Bank");
         addGuiComponents();
     }
 
@@ -27,54 +29,59 @@ public class LoginForm extends Frame implements ActionListener {
 
         getContentPane().setBackground(Color.white);
 
+        //Welcome Label
         JLabel welcomeLabel = new JLabel("Welcome to ATM");
         welcomeLabel.setBounds(220,40,370,40);
         welcomeLabel.setFont(new Font("Osward",Font.BOLD,38));
         add(welcomeLabel);
 
+        //Card Num Label
         JLabel cardNoLabel = new JLabel("Card No :");
         cardNoLabel.setBounds(120,160,250,30);
         cardNoLabel.setFont(new Font("Dialog",Font.BOLD,28));
         add(cardNoLabel);
 
+        //Pin Num Label
         JLabel pinNoLabel = new JLabel("Pin :");
         pinNoLabel.setBounds(120,230,250,30);
         pinNoLabel.setFont(new Font("Dialog",Font.BOLD,28));
         add(pinNoLabel);
 
-        cardNoField = new JTextField();
-        cardNoField.setBounds(300,160,250,30);
-        cardNoField.setBorder(new LineBorder(Color.BLACK,2));
-        cardNoLabel.setFont(new Font("Dialog",Font.PLAIN,28));
-        add(cardNoField);
+        //Card Num text field
+        cardNoTextField = new JTextField();
+        cardNoTextField.setBounds(300,160,250,30);
+        cardNoTextField.setBorder(new LineBorder(Color.BLACK,2));
+        cardNoTextField.setFont(new Font("Dialog",Font.PLAIN,28));
+        add(cardNoTextField);
 
-        pinField = new JPasswordField();
-        pinField.setBounds(300,230,250,30);
-        pinField.setBorder(new LineBorder(Color.BLACK,2));
-        pinField.setFont(new Font("Dialog",Font.PLAIN,28));
-        add(pinField);
+        //Pin Text Field
+        pinTextField = new JPasswordField();
+        pinTextField.setBounds(300,230,250,30);
+        pinTextField.setBorder(new LineBorder(Color.BLACK,2));
+        pinTextField.setFont(new Font("Dialog",Font.PLAIN,28));
+        add(pinTextField);
 
         //Clear button
-        JButton signInButton = new JButton("Clear");
-        signInButton.setBounds(300,290,120,50);
-        signInButton.setBackground(Color.BLACK);
+        JButton clearButton = new JButton("Clear");
+        clearButton.setBounds(300,290,120,50);
+        clearButton.setBackground(Color.BLACK);
+        clearButton.setForeground(Color.WHITE);
+        clearButton.setFont(new Font("Dialog", Font.BOLD,20));
+        clearButton.addActionListener(this);
+        add(clearButton);
+
+        //Sign in button
+        JButton signInButton = new JButton("Sign-In");
+        signInButton.setBounds(450,290,120,50);
+        signInButton.setBackground(Color.RED);
         signInButton.setForeground(Color.WHITE);
         signInButton.setFont(new Font("Dialog", Font.BOLD,20));
         signInButton.addActionListener(this);
         add(signInButton);
 
-        //Sign in button
-        JButton clearButton = new JButton("Sign-In");
-        clearButton.setBounds(450,290,120,50);
-        clearButton.setBackground(Color.RED);
-        clearButton.setForeground(Color.WHITE);
-        clearButton.setFont(new Font("Dialog", Font.BOLD,20));
-        signInButton.addActionListener(this);
-        add(clearButton);
-
         JLabel registerLabel = new JLabel("Not a User? Register Here!");
-        registerLabel.setBounds(300,370,400,20);
-        registerLabel.setFont(new Font("Osward",Font.BOLD,18));
+        registerLabel.setBounds(300,370,400,25);
+        registerLabel.setFont(new Font("Osward",Font.BOLD,23));
         registerLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         registerLabel.addMouseListener(new MouseAdapter() {
             @Override
@@ -84,7 +91,6 @@ public class LoginForm extends Frame implements ActionListener {
             }
         });
         add(registerLabel);
-
     }
 
 
@@ -94,11 +100,19 @@ public class LoginForm extends Frame implements ActionListener {
         String command = e.getActionCommand();
 
         if(command.equals("Clear")) {
-            cardNoField.setText("");
-            pinField.setText("");
+            cardNoTextField.setText("");
+            pinTextField.setText("");
         }
         else if(command.equals("Sign-In")) {
 
+            String cardNum = cardNoTextField.getText();
+            String pinNum = new String(pinTextField.getPassword());
+
+            if(JDBC.validateLogin(cardNum,pinNum)) {
+                LoginForm.this.dispose();
+                new TransactionsPage(pinNum).setVisible(true);
+            }
+            else JOptionPane.showMessageDialog(LoginForm.this,"Incorrect Card No or Pin");
         }
     }
 }

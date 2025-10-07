@@ -1,6 +1,7 @@
 package database;
 
 import constants.CommonConstants;
+import gui.TransactionsPage;
 
 import java.sql.*;
 
@@ -133,6 +134,25 @@ public class JDBC {
         catch(SQLException se) {
             se.printStackTrace();
         }
+        return false;
+    }
+
+    public static boolean validateLogin(String cardNum, String pinNum) {
+
+        try{
+            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+            String query = "SELECT * FROM " + CommonConstants.db_users_table+" WHERE Card_No = ? AND Pin_No = ?";
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setString(1,cardNum);
+            statement.setString(2,pinNum);
+
+            ResultSet result = statement.executeQuery();
+            if(result.next()) return true;
+        }
+        catch (SQLException se) {
+            se.printStackTrace();
+        }
+
         return false;
     }
 }

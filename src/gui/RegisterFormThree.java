@@ -181,7 +181,9 @@ public class RegisterFormThree extends Frame implements ActionListener {
         String command = ae.getActionCommand();
 
         if(command.equals("Cancel")) {
-
+            JOptionPane.showMessageDialog(RegisterFormThree.this,"Application process is Cancelled");
+            RegisterFormThree.this.dispose();
+            new LoginForm().setVisible(true);
         }
         else {
             String accountType = null;
@@ -194,7 +196,7 @@ public class RegisterFormThree extends Frame implements ActionListener {
             String cardNum = ""+ Math.abs((random.nextLong() % 90000000L) + 5040904600000000L);
             String pinNum = ""+ Math.abs((random.nextLong() % 9000L) + 1000L);
 
-            String servicesRequiredString = null;
+            String servicesRequiredString = "";
             if(c1.isSelected()) servicesRequiredString = servicesRequiredString + " ATM Card";
             if(c2.isSelected()) servicesRequiredString = servicesRequiredString + " Internet Banking";
             if(c3.isSelected()) servicesRequiredString = servicesRequiredString + " Mobile Banking";
@@ -206,11 +208,15 @@ public class RegisterFormThree extends Frame implements ActionListener {
             try{
                 if(servicesRequiredString.equals("")) JOptionPane.showMessageDialog(RegisterFormThree.this,"Account Type is required");
                 else{
-                    JDBC.registerFormThreeDetails(accountType,cardNum,pinNum,servicesRequiredString,formNum);
-                    JOptionPane.showMessageDialog(RegisterFormThree.this,"Details submitted successfully\n" +
-                            "Please Login");
-                    RegisterFormThree.this.dispose();
-                    new LoginForm().setVisible(true);
+                    if(c7.isSelected()) {
+                        JDBC.registerFormThreeDetails(accountType,cardNum,pinNum,servicesRequiredString,formNum);
+                        JOptionPane.showMessageDialog(RegisterFormThree.this,"Details submitted successfully\n" +
+                                "Please Login");
+                        RegisterFormThree.this.dispose();
+                        new LoginForm().setVisible(true);
+                    }
+                    else JOptionPane.showMessageDialog(RegisterFormThree.this,"Please accept the terms & conditions.\n" +
+                            "Then click on Submit.");
                 }
             }
             catch(Exception e){
