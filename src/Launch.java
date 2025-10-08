@@ -1,5 +1,5 @@
 import gui.LoginForm;
-import gui.TransactionsPage;
+import gui.Withdrawl;
 
 import javax.swing.*;
 
@@ -11,8 +11,8 @@ public class Launch {
             @Override
             public void run() {
 
-                new LoginForm().setVisible(true);
-//                new TransactionsPage().setVisible(true);
+//                new LoginForm().setVisible(true);
+                new Withdrawl("123","13").setVisible(true);
             }
         });
     }

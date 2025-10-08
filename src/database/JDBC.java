@@ -155,4 +155,41 @@ public class JDBC {
 
         return false;
     }
+
+    public static void depositAmount(String amount, String currentTime, String cardNum, String type) {
+
+        try {
+            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+            String query = "Insert into bank (Card_No, Date, Type, Amount)Values(?,?,?,?)";
+            insertUser = connection.prepareStatement(query);
+            insertUser.setString(1,cardNum);
+            insertUser.setString(2,currentTime);
+            insertUser.setString(3,type);
+            insertUser.setString(4,amount);
+
+            insertUser.executeUpdate();
+        }
+        catch(SQLException se) {
+            se.printStackTrace();
+        }
+    }
+
+    //Still working on it.
+//    public static void withdrawAmount(String amount, String currentTime, String cardNum, String type) {
+//
+//        try {
+//            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+//            String query = "Insert into bank (Card_No, Date, Type, Amount)Values(?,?,?,?)";
+//            insertUser = connection.prepareStatement(query);
+//            insertUser.setString(1,cardNum);
+//            insertUser.setString(2,currentTime);
+//            insertUser.setString(3,type);
+//            insertUser.setString(4,amount);
+//
+//            insertUser.executeUpdate();
+//        }
+//        catch(SQLException se) {
+//            se.printStackTrace();
+//        }
+//    }
 }

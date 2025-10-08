@@ -204,19 +204,18 @@ public class RegisterFormThree extends Frame implements ActionListener {
             if(c5.isSelected()) servicesRequiredString = servicesRequiredString + " Cheque Book";
             if(c6.isSelected()) servicesRequiredString = servicesRequiredString + " E-Statements";
 
+
+
             //Validations
             try{
                 if(servicesRequiredString.equals("")) JOptionPane.showMessageDialog(RegisterFormThree.this,"Account Type is required");
+                else if(!c7.isSelected()) JOptionPane.showMessageDialog(RegisterFormThree.this,"Please accept the T&C.");
                 else{
-                    if(c7.isSelected()) {
-                        JDBC.registerFormThreeDetails(accountType,cardNum,pinNum,servicesRequiredString,formNum);
-                        JOptionPane.showMessageDialog(RegisterFormThree.this,"Details submitted successfully\n" +
-                                "Please Login");
-                        RegisterFormThree.this.dispose();
-                        new LoginForm().setVisible(true);
-                    }
-                    else JOptionPane.showMessageDialog(RegisterFormThree.this,"Please accept the terms & conditions.\n" +
-                            "Then click on Submit.");
+                    JDBC.registerFormThreeDetails(accountType,cardNum,pinNum,servicesRequiredString,formNum);
+                    JOptionPane.showMessageDialog(RegisterFormThree.this,"Details submitted successfully\n" +
+                            "Please Login");
+                    RegisterFormThree.this.dispose();
+                    new LoginForm().setVisible(true);
                 }
             }
             catch(Exception e){

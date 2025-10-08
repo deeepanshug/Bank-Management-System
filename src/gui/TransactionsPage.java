@@ -8,13 +8,14 @@ import java.awt.event.MouseEvent;
 
 public class TransactionsPage extends Frame{
 
-    String pinNum;
+    String cardNum,pinNum;
 
-    public TransactionsPage(String pinNum) {
+    public TransactionsPage(String cardNum,String pinNum) {
 
         super("HDFC");
         setSize(900,980);
         setLocationRelativeTo(null);
+        this.cardNum = cardNum;
         this.pinNum = pinNum;
         addGuiComponents();
         setUndecorated(true);
@@ -43,7 +44,8 @@ public class TransactionsPage extends Frame{
         depositLabel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-
+                TransactionsPage.this.dispose();
+                new Deposit(cardNum,pinNum).setVisible(true);
             }
         });
         atmImgIcon.add(depositLabel);
@@ -54,6 +56,13 @@ public class TransactionsPage extends Frame{
         cashWithdrawlLabel.setForeground(Color.yellow);
         cashWithdrawlLabel.setFont(new Font("Raleway",Font.BOLD,18));
         cashWithdrawlLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        cashWithdrawlLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TransactionsPage.this.dispose();
+                new Withdrawl(cardNum,pinNum).setVisible(true);
+            }
+        });
         atmImgIcon.add(cashWithdrawlLabel);
 
         //Fast Cash label

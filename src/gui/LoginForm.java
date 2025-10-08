@@ -49,14 +49,14 @@ public class LoginForm extends Frame implements ActionListener {
 
         //Card Num text field
         cardNoTextField = new JTextField();
-        cardNoTextField.setBounds(300,160,250,30);
+        cardNoTextField.setBounds(300,160,280,30);
         cardNoTextField.setBorder(new LineBorder(Color.BLACK,2));
         cardNoTextField.setFont(new Font("Dialog",Font.PLAIN,28));
         add(cardNoTextField);
 
         //Pin Text Field
         pinTextField = new JPasswordField();
-        pinTextField.setBounds(300,230,250,30);
+        pinTextField.setBounds(300,230,280,30);
         pinTextField.setBorder(new LineBorder(Color.BLACK,2));
         pinTextField.setFont(new Font("Dialog",Font.PLAIN,28));
         add(pinTextField);
@@ -110,7 +110,7 @@ public class LoginForm extends Frame implements ActionListener {
 
             if(JDBC.validateLogin(cardNum,pinNum)) {
                 LoginForm.this.dispose();
-                new TransactionsPage(pinNum).setVisible(true);
+                new TransactionsPage(cardNum, pinNum).setVisible(true);
             }
             else JOptionPane.showMessageDialog(LoginForm.this,"Incorrect Card No or Pin");
         }
