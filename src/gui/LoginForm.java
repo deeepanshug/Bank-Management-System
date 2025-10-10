@@ -105,8 +105,9 @@ public class LoginForm extends Frame implements ActionListener {
         }
         else if(command.equals("Sign-In")) {
 
-            String cardNum = cardNoTextField.getText();
-            String pinNum = new String(pinTextField.getPassword());
+            long cardNum = Long.parseLong(cardNoTextField.getText());
+            String pin = new String(pinTextField.getPassword());
+            long pinNum = Long.parseLong(pin);
 
             if(JDBC.validateLogin(cardNum,pinNum)) {
                 LoginForm.this.dispose();

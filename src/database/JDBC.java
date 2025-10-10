@@ -3,15 +3,16 @@ package database;
 import constants.CommonConstants;
 import gui.TransactionsPage;
 
+import javax.swing.*;
 import java.sql.*;
 
 public class JDBC {
 
     private static Connection connection;
-    private static PreparedStatement insertUser, updateStatement;
+    private static PreparedStatement insertUser, updateStatement,checkStatement, userCheck, fetchBalance;
 
 
-    public static void registerFormOneDetails(String accountNo, String name, String fatherName, String dob, String email, String address, String city, String state,
+    public static void registerFormOneDetails(long accountNo, String name, String fatherName, String dob, String email, String address, String city, String state,
                                    String pincode, String gender, String marital) {
 
         try{
@@ -21,7 +22,7 @@ public class JDBC {
              "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
 
-            insertUser.setString(1,accountNo);
+            insertUser.setLong(1,accountNo);
             insertUser.setString(2,name);
             insertUser.setString(3,fatherName);
             insertUser.setString(4,dob);
@@ -49,7 +50,7 @@ public class JDBC {
     }
 
     public static void registerFormTwoDetails(String religion, String category, String income, String education,
-                                              String occupation, String panNum, String aadhaar, String senior, String existingAccount,String accountNo) {
+                                              String occupation, String panNum, String aadhaar, String senior, String existingAccount,long accountNo) {
 
         try{
             connection = DriverManager.getConnection(CommonConstants.db_URL, CommonConstants.db_username,CommonConstants.db_password);
@@ -66,7 +67,7 @@ public class JDBC {
             insertUser.setString(7,aadhaar);
             insertUser.setString(8,senior);
             insertUser.setString(9,existingAccount);
-            insertUser.setString(10,accountNo);
+            insertUser.setLong(10,accountNo);
 
             insertUser.executeUpdate();
         }
@@ -83,7 +84,7 @@ public class JDBC {
 //        }
     }
 
-    public static void registerFormThreeDetails(String accountType, String cardNum, String pinNum, String requiredServices, String accountNo) {
+    public static void registerFormThreeDetails(String accountType, long cardNum, long pinNum, String requiredServices, long accountNo) {
 
         try{
             connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
@@ -92,10 +93,10 @@ public class JDBC {
             updateStatement = connection.prepareStatement(query);
 
             updateStatement.setString(1,accountType);
-            updateStatement.setString(2,cardNum);
-            updateStatement.setString(3,pinNum);
+            updateStatement.setLong(2,cardNum);
+            updateStatement.setLong(3,pinNum);
             updateStatement.setString(4,requiredServices);
-            updateStatement.setString(5, accountNo);
+            updateStatement.setLong(5, accountNo);
 
             updateStatement.executeUpdate();
         }
@@ -137,14 +138,14 @@ public class JDBC {
         return false;
     }
 
-    public static boolean validateLogin(String cardNum, String pinNum) {
+    public static boolean validateLogin(long cardNum, long pinNum) {
 
         try{
             connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
             String query = "SELECT * FROM " + CommonConstants.db_users_table+" WHERE Card_No = ? AND Pin_No = ?";
             PreparedStatement statement = connection.prepareStatement(query);
-            statement.setString(1,cardNum);
-            statement.setString(2,pinNum);
+            statement.setLong(1,cardNum);
+            statement.setLong(2,pinNum);
 
             ResultSet result = statement.executeQuery();
             if(result.next()) return true;
@@ -156,40 +157,114 @@ public class JDBC {
         return false;
     }
 
-    public static void depositAmount(String amount, String currentTime, String cardNum, String type) {
+    public static long currBalance(long cardNum) {
 
+        long ans = 0;
         try {
             connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
-            String query = "Insert into bank (Card_No, Date, Type, Amount)Values(?,?,?,?)";
-            insertUser = connection.prepareStatement(query);
-            insertUser.setString(1,cardNum);
-            insertUser.setString(2,currentTime);
-            insertUser.setString(3,type);
-            insertUser.setString(4,amount);
+            String fetchCurrBalanceQuery = "Select Balance from bank_statements where Card_No = ?";
 
-            insertUser.executeUpdate();
+            fetchBalance = connection.prepareStatement(fetchCurrBalanceQuery);
+            fetchBalance.setLong(1,cardNum);
+
+            ResultSet result = fetchBalance.executeQuery();
+            while(result.next()) {
+                ans = result.getLong(1);
+            }
+            fetchBalance.close();
+            connection.close();
+        }
+        catch(SQLException se) {
+            se.printStackTrace();
+        }
+        return ans;
+    }
+
+    public static void depositAmount(long amount, String currentTime, long cardNum, String type) {
+
+        long balance = 0;
+
+        try{
+            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+
+            String checkIfUserExistInBankStatements = "SELECT * FROM users WHERE Card_No = ?";
+            String dataInsertionQuery = "Insert into bank_statements (Card_No, Date, Type, Amount, Balance)Values(?,?,?,?,?)";
+
+            userCheck = connection.prepareStatement(checkIfUserExistInBankStatements);
+            userCheck.setLong(1,cardNum);
+
+            ResultSet result = userCheck.executeQuery();
+            boolean ans = result.isBeforeFirst();       //Check if the user exists in the resultset or not
+
+
+            if(!ans) {
+                insertUser = connection.prepareStatement(dataInsertionQuery);
+                insertUser.setLong(1,cardNum);
+                insertUser.setString(2,currentTime);
+                insertUser.setString(3,type);
+                insertUser.setLong(4,amount);
+                insertUser.setLong(5,amount);
+                insertUser.executeUpdate();
+
+            }
+            else {
+                balance = 0;
+                String fetchBalanceQuery = "Select Balance from bank_statements where Card_No = ?";
+
+                fetchBalance = connection.prepareStatement(fetchBalanceQuery);
+                fetchBalance.setLong(1,cardNum);
+
+                ResultSet resultBalance = fetchBalance.executeQuery();
+                while(resultBalance.next()) {
+                    balance = resultBalance.getLong(1);
+                }
+
+                long newBalance = balance + amount;
+                fetchBalance.close();
+                insertUser = connection.prepareStatement(dataInsertionQuery);
+                insertUser.setLong(1,cardNum);
+                insertUser.setString(2,currentTime);
+                insertUser.setString(3,type);
+                insertUser.setLong(4,amount);
+                insertUser.setLong(5,newBalance);
+
+                insertUser.executeUpdate();
+            }
+            userCheck.close();
+            insertUser.close();
+            connection.close();
         }
         catch(SQLException se) {
             se.printStackTrace();
         }
     }
 
-    //Still working on it.
-//    public static void withdrawAmount(String amount, String currentTime, String cardNum, String type) {
-//
-//        try {
-//            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
-//            String query = "Insert into bank (Card_No, Date, Type, Amount)Values(?,?,?,?)";
-//            insertUser = connection.prepareStatement(query);
-//            insertUser.setString(1,cardNum);
-//            insertUser.setString(2,currentTime);
-//            insertUser.setString(3,type);
-//            insertUser.setString(4,amount);
-//
-//            insertUser.executeUpdate();
-//        }
-//        catch(SQLException se) {
-//            se.printStackTrace();
-//        }
-//    }
+    public static void withdrawAmount(long amount, String currentTime, long cardNum, String type, long currBalance) {
+
+        if(currBalance >= amount) {
+
+            long newBalance = currBalance - amount;
+            try {
+                connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+                String queryToInsertTransaction = "Insert into bank_statements (Card_No, Date, Type, Amount, Balance)Values(?,?,?,?, ?)";
+
+                insertUser = connection.prepareStatement(queryToInsertTransaction);
+                insertUser.setLong(1,cardNum);
+                insertUser.setString(2,currentTime);
+                insertUser.setString(3,type);
+                insertUser.setLong(4,amount);
+                insertUser.setLong(5,newBalance);
+
+                insertUser.executeUpdate();
+                insertUser.close();
+                connection.close();
+            }
+            catch(SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        else {
+            JOptionPane.showMessageDialog(null,"Not Enough Balance");
+        }
+    }
 }

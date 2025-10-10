@@ -1,5 +1,4 @@
 import gui.LoginForm;
-import gui.Withdrawl;
 
 import javax.swing.*;
 
@@ -10,10 +9,9 @@ public class Launch {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-
-//                new LoginForm().setVisible(true);
-                new Withdrawl("123","13").setVisible(true);
+                new LoginForm().setVisible(true);
             }
+
         });
     }
 }

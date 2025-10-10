@@ -13,9 +13,9 @@ public class RegisterFormThree extends Frame implements ActionListener {
     JRadioButton r1,r2,r3,r4;
     JCheckBox c1,c2,c3,c4,c5,c6,c7;
     JButton cancelButton,submitButton;
-    String formNum;
+    long formNum;
 
-    public RegisterFormThree(String formNum) {
+    public RegisterFormThree(long formNum) {
 
         super("NEW ACCOUNT APPLICATION FORM - PAGE 3");
         setSize(850,820);
@@ -193,8 +193,8 @@ public class RegisterFormThree extends Frame implements ActionListener {
             else accountType = "Recurring Deposit Account";
 
             Random random = new Random();
-            String cardNum = ""+ Math.abs((random.nextLong() % 90000000L) + 5040904600000000L);
-            String pinNum = ""+ Math.abs((random.nextLong() % 9000L) + 1000L);
+            long cardNum = Math.abs((random.nextLong() % 90000000L) + 5040904600000000L);
+            long pinNum = Math.abs((random.nextLong() % 9000L) + 1000L);
 
             String servicesRequiredString = "";
             if(c1.isSelected()) servicesRequiredString = servicesRequiredString + " ATM Card";

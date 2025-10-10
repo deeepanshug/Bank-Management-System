@@ -8,9 +8,9 @@ import java.awt.event.MouseEvent;
 
 public class TransactionsPage extends Frame{
 
-    String cardNum,pinNum;
+    long cardNum,pinNum;
 
-    public TransactionsPage(String cardNum,String pinNum) {
+    public TransactionsPage(long cardNum,long pinNum) {
 
         super("HDFC");
         setSize(900,980);

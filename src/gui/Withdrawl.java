@@ -12,9 +12,9 @@ public class Withdrawl extends Frame implements ActionListener {
 
     private JTextField amountTextField;
     private JButton withdrawButton, backButton;
-    private String cardNum, pinNum;
+    private long cardNum, pinNum;
 
-    public Withdrawl(String cardNum, String pinNum) {
+    public Withdrawl(long cardNum, long pinNum) {
 
         super("HDFC Cash Withdrawl");
         setSize(900,980);
@@ -45,7 +45,7 @@ public class Withdrawl extends Frame implements ActionListener {
         atmImgIcon.add(amountTextField);
 
         //Withdraw Button
-        withdrawButton = new JButton("Withdrawl");
+        withdrawButton = new JButton("Withdraw");
         withdrawButton.setBounds(360,535,150,35);
         withdrawButton.setFont(new Font("Raleway",Font.PLAIN,20));
         withdrawButton.addActionListener(this);
@@ -63,15 +63,22 @@ public class Withdrawl extends Frame implements ActionListener {
 
         String command = e.getActionCommand();
 
-        if(command.equals("Withdrawl")) {
-            String amount = amountTextField.getText();
+        if(command.equals("Withdraw")) {
+            String amountString = amountTextField.getText();
+            long amount = Long.parseLong(amountString);
             Date time = new Date();
             String currentTime = String.valueOf(time);
 
-            if(amount.equals("")) JOptionPane.showMessageDialog(Withdrawl.this,"Please fill the amount");
+            if(amountString.equals("")) JOptionPane.showMessageDialog(Withdrawl.this,"Please fill the amount");
             else {
-//                JDBC.withdrawAmount(amount,currentTime,cardNum,"Withdrawl");
-                JOptionPane.showMessageDialog(null,"Withdraw of Rs "+amount +" Successfully");
+                long currBalance = JDBC.currBalance(cardNum);
+
+                if(currBalance >= amount){
+                    JDBC.withdrawAmount(amount,currentTime,cardNum,"Withdrawl",currBalance);
+                    JOptionPane.showMessageDialog(null,"Withdraw of Rs "+amount +"Successfully");
+                }
+                else JOptionPane.showMessageDialog(null,"Not Enough Balance");
+
                 Withdrawl.this.dispose();
                 new TransactionsPage(cardNum,pinNum).setVisible(true);
             }

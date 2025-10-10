@@ -10,12 +10,12 @@ import java.awt.event.ActionListener;
 
 public class RegisterFormOne extends Frame{
 
-    String accountNo;
+    long accountNo;
     JTextField nameTextField, fathersNameTextField, emailTextField, addressTextField, cityTextField, stateTextField, pincodeTextField;
     JRadioButton male,female,married,unmarried;
     JDateChooser dateChooser;
     JButton nextButton;
-    public static int num = 1001;
+    long num = 1001;
 
     public RegisterFormOne() {
 
@@ -197,7 +197,7 @@ public class RegisterFormOne extends Frame{
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                accountNo = "" + num;
+                accountNo = num;
                 String name = nameTextField.getText();
                 String fatherName = fathersNameTextField.getText();
                 String dob = ((JTextField) dateChooser.getDateEditor().getUiComponent()).getText();

@@ -12,9 +12,9 @@ public class Deposit extends Frame implements ActionListener {
 
     private JTextField amountTextField;
     private JButton depositButton,backButton;
-    private String cardNum, pinNum;
+    private long cardNum, pinNum;
 
-    public Deposit(String cardNum, String pinNum) {
+    public Deposit(long cardNum, long pinNum) {
 
         super("HDFC Deposit");
         setSize(900,980);
@@ -65,12 +65,13 @@ public class Deposit extends Frame implements ActionListener {
 
         String command = e.getActionCommand();
         if(command.equals("Deposit")) {
-            String amount = amountTextField.getText();
+            String amountString = amountTextField.getText();
+            long amount = Long.parseLong(amountString);
             Date time = new Date();
             String currentTime = String.valueOf(time);
 
 
-            if(amount.equals("")) JOptionPane.showMessageDialog(Deposit.this,"Please fill the amount");
+            if(amountString.equals("")) JOptionPane.showMessageDialog(Deposit.this,"Please fill the amount");
             else {
                 JDBC.depositAmount(amount,currentTime,cardNum,"Deposit");
                 JOptionPane.showMessageDialog(null,"Deposit of Rs "+amount +" Successfully");

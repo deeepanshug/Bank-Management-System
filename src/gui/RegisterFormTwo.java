@@ -14,9 +14,9 @@ public class RegisterFormTwo extends Frame{
     JComboBox religionCombo, categoryCombo, incomeCombo, educationalCombo, occupationalCombo;
     JButton submitButton;
     public static String religion, category, income, education, occupation, panNum, aadhaar, senior, existingAccount;
-    String formNum = null;
+    long formNum = 0;
 
-    public RegisterFormTwo(String formNum) {
+    public RegisterFormTwo(long formNum) {
         super("NEW ACCOUNT APPLICATION FORM - PAGE 2");
         setSize(850,800);
         setLocationRelativeTo(null);
