@@ -35,18 +35,12 @@ public class JDBC {
             insertUser.setString(11,marital);
 
             insertUser.executeUpdate();
+            insertUser.close();
+            connection.close();
         }
         catch(SQLException se) {
             se.printStackTrace();
         }
-//        finally {
-//            try{
-//                if(insertUser != null) insertUser.close();
-//                if(connection != null) connection.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     public static void registerFormTwoDetails(String religion, String category, String income, String education,
@@ -70,18 +64,12 @@ public class JDBC {
             insertUser.setLong(10,accountNo);
 
             insertUser.executeUpdate();
+            insertUser.close();
+            connection.close();
         }
         catch(SQLException se) {
             se.printStackTrace();
         }
-//        finally {
-//            try{
-//                if(insertUser != null) insertUser.close();
-//                if(connection != null) connection.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     public static void registerFormThreeDetails(String accountType, long cardNum, long pinNum, String requiredServices, long accountNo) {
@@ -99,18 +87,12 @@ public class JDBC {
             updateStatement.setLong(5, accountNo);
 
             updateStatement.executeUpdate();
+            updateStatement.close();
+            connection.close();
         }
         catch(SQLException se) {
             se.printStackTrace();
         }
-//        finally{
-//            try{
-//                if(updateStatement != null) updateStatement.close();
-//                if(connection != null) connection.close();
-//            } catch (SQLException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
 
     public static boolean checkIfUserExists(String name, String fatherName, String email, String pincode, String gender){
@@ -265,6 +247,25 @@ public class JDBC {
         }
         else {
             JOptionPane.showMessageDialog(null,"Not Enough Balance");
+        }
+    }
+
+    public static void pinChange(long cardNum, long newPin){
+
+        try{
+            connection = DriverManager.getConnection(CommonConstants.db_URL,CommonConstants.db_username,CommonConstants.db_password);
+            String query = "Update users set Pin_No = ? where Card_No = ?";
+
+            updateStatement = connection.prepareStatement(query);
+            updateStatement.setLong(1,newPin);
+            updateStatement.setLong(2,cardNum);
+
+            updateStatement.executeUpdate();
+            updateStatement.close();
+            connection.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

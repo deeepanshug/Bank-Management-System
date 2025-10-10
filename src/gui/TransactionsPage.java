@@ -1,6 +1,8 @@
 package gui;
 
 
+import database.JDBC;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -71,6 +73,13 @@ public class TransactionsPage extends Frame{
         fastCashLabel.setForeground(Color.yellow);
         fastCashLabel.setFont(new Font("Raleway",Font.BOLD,18));
         fastCashLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        fastCashLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                TransactionsPage.this.dispose();
+                new FastCash(cardNum,pinNum).setVisible(true);
+            }
+        });
         atmImgIcon.add(fastCashLabel);
 
         //Mini statement label
@@ -87,6 +96,14 @@ public class TransactionsPage extends Frame{
         pinChangeLabel.setForeground(Color.yellow);
         pinChangeLabel.setFont(new Font("Raleway",Font.BOLD,18));
         pinChangeLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        pinChangeLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                TransactionsPage.this.dispose();
+                new PinChange(cardNum,pinNum).setVisible(true);
+            }
+        });
         atmImgIcon.add(pinChangeLabel);
 
         //Balance Inquiry label
@@ -95,6 +112,13 @@ public class TransactionsPage extends Frame{
         balanceInquiryLabel.setForeground(Color.yellow);
         balanceInquiryLabel.setFont(new Font("Raleway",Font.BOLD,18));
         balanceInquiryLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        balanceInquiryLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                long balance = JDBC.currBalance(cardNum);
+                JOptionPane.showMessageDialog(null,"Your current Balance is "+balance+".");
+            }
+        });
         atmImgIcon.add(balanceInquiryLabel);
 
         //Log Out label

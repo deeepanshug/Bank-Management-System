@@ -1,4 +1,6 @@
 import gui.LoginForm;
+import gui.PinChange;
+import gui.TransactionsPage;
 
 import javax.swing.*;
 
