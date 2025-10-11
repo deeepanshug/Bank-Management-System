@@ -13,8 +13,8 @@ import java.awt.event.ActionListener;
 public class PinChange extends Frame implements ActionListener {
 
     long cardNum,pinNum;
-    JButton cancelButton,submitButton;
-    JTextField newPinTextField, reEnterNewPinTextField;
+    JButton cancelButton,changeButton;
+    JPasswordField newPinPasswordField, reEnterNewPinPasswordField;
 
     public PinChange(long cardNum, long pinNum) {
 
@@ -24,7 +24,7 @@ public class PinChange extends Frame implements ActionListener {
         this.cardNum = cardNum;
         this.pinNum = pinNum;
         addGuiComponents();
-//        setUndecorated(true);
+        setUndecorated(true);
     }
 
     private void addGuiComponents() {
@@ -49,17 +49,17 @@ public class PinChange extends Frame implements ActionListener {
         atmImgIcon.add(pinLabel);
 
         //New pin Text Field
-        newPinTextField = new JTextField();
-        newPinTextField.setBounds(330,370,180,25);
-        newPinTextField.setFont(new Font("Raleway",Font.BOLD,16));
-        newPinTextField.setDocument(new PlainDocument() {
+        newPinPasswordField = new JPasswordField();
+        newPinPasswordField.setBounds(330,370,180,25);
+        newPinPasswordField.setFont(new Font("Raleway",Font.BOLD,16));
+        newPinPasswordField.setDocument(new PlainDocument() {
             public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
                 if (str == null || getLength() + str.length() <= 4) {
                     super.insertString(offset, str, attr);
                 }
             }
         });
-        atmImgIcon.add(newPinTextField);
+        atmImgIcon.add(newPinPasswordField);
 
         //Re-enter pin Label
         JLabel reEnterLabel = new JLabel("Re-Enter New Pin :");
@@ -69,17 +69,17 @@ public class PinChange extends Frame implements ActionListener {
         atmImgIcon.add(reEnterLabel);
 
         //Re Enter New pin Text Field
-        reEnterNewPinTextField = new JTextField();
-        reEnterNewPinTextField.setBounds(330,410,180,25);
-        reEnterNewPinTextField.setFont(new Font("Raleway",Font.BOLD,16));
-        reEnterNewPinTextField.setDocument(new PlainDocument() {
+        reEnterNewPinPasswordField = new JPasswordField();
+        reEnterNewPinPasswordField.setBounds(330,410,180,25);
+        reEnterNewPinPasswordField.setFont(new Font("Raleway",Font.BOLD,16));
+        reEnterNewPinPasswordField.setDocument(new PlainDocument() {
             public void insertString(int offset, String str, AttributeSet attr) throws BadLocationException {
                 if (str == null || getLength() + str.length() <= 4) {
                     super.insertString(offset, str, attr);
                 }
             }
         });
-        atmImgIcon.add(reEnterNewPinTextField);
+        atmImgIcon.add(reEnterNewPinPasswordField);
 
         //cancel button
         cancelButton = new JButton("Cancel");
@@ -90,42 +90,40 @@ public class PinChange extends Frame implements ActionListener {
         cancelButton.addActionListener(this);
         atmImgIcon.add(cancelButton);
 
-        //submit button
-        submitButton = new JButton("Submit");
-        submitButton.setBounds(400,525,100,40);
-        submitButton.setBackground(Color.BLACK);
-        submitButton.setForeground(Color.WHITE);
-        submitButton.setFont(new Font("Raleway",Font.BOLD,18));
-        submitButton.addActionListener(this);
-        atmImgIcon.add(submitButton);
+        //Change button
+        changeButton = new JButton("Change");
+        changeButton.setBounds(350,525,120,40);
+        changeButton.setBackground(Color.BLACK);
+        changeButton.setForeground(Color.WHITE);
+        changeButton.setFont(new Font("Raleway",Font.BOLD,18));
+        changeButton.addActionListener(this);
+        atmImgIcon.add(changeButton);
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        String pin = newPinTextField.getText();
-        String rePin = reEnterNewPinTextField.getText();
+        String pin = new String(newPinPasswordField.getPassword());
+        String rePin = new String(reEnterNewPinPasswordField.getPassword());
+        String command = e.getActionCommand();
 
-        if(pin.equals(rePin)) {
-            String command = e.getActionCommand();
+        if(command.equals("Cancel")) {
+            PinChange.this.dispose();
+            new TransactionsPage(cardNum,pinNum).setVisible(true);
+        }
+        else if(pin.equals(rePin) && command.equals("Change")) {
             long newPin = Long.parseLong(pin);
 
-            if(command.equals("Submit")) {
-                JDBC.pinChange(cardNum,newPin);
-                JOptionPane.showMessageDialog(null,"Your Pin is now Changed");
-                PinChange.this.dispose();
-                new LoginForm().setVisible(true);
-            }
-            else {
-                PinChange.this.dispose();
-                new TransactionsPage(cardNum,pinNum).setVisible(true);
-            }
+            JDBC.pinChange(cardNum,newPin);
+            JOptionPane.showMessageDialog(null,"Your Pin is now Changed");
+            PinChange.this.dispose();
+            new LoginForm().setVisible(true);
         }
         else {
             JOptionPane.showMessageDialog(null,"Your Entered Wrong Pin.\n" +
                     "Try Again");
-            newPinTextField.setText("");
-            reEnterNewPinTextField.setText("");
+            newPinPasswordField.setText("");
+            reEnterNewPinPasswordField.setText("");
         }
     }
 }

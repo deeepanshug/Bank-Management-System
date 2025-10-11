@@ -88,6 +88,13 @@ public class TransactionsPage extends Frame{
         miniStatementLabel.setForeground(Color.yellow);
         miniStatementLabel.setFont(new Font("Raleway",Font.BOLD,18));
         miniStatementLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        miniStatementLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+
+                new MiniStatement(cardNum,pinNum).setVisible(true);
+            }
+        });
         atmImgIcon.add(miniStatementLabel);
 
         //Pin Change label

@@ -22,6 +22,7 @@ public class Withdrawl extends Frame implements ActionListener {
         this.cardNum = cardNum;
         this.pinNum = pinNum;
         addGuiComponents();
+        setUndecorated(true);
     }
 
     private void addGuiComponents() {
