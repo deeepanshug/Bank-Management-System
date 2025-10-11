@@ -4,12 +4,13 @@ import constants.CommonConstants;
 import gui.TransactionsPage;
 
 import javax.swing.*;
+import javax.swing.table.TableModel;
 import java.sql.*;
 
 public class JDBC {
 
     private static Connection connection;
-    private static PreparedStatement insertUser, updateStatement,checkStatement, userCheck, fetchBalance;
+    private static PreparedStatement insertUser, updateStatement,fetchData, userCheck, fetchBalance;
 
 
     public static void registerFormOneDetails(long accountNo, String name, String fatherName, String dob, String email, String address, String city, String state,
@@ -268,4 +269,6 @@ public class JDBC {
             e.printStackTrace();
         }
     }
+
+
 }

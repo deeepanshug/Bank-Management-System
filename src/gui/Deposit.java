@@ -22,6 +22,7 @@ public class Deposit extends Frame implements ActionListener {
         this.pinNum = pinNum;
         setLocationRelativeTo(null);
         addGuiComponents();
+        setUndecorated(true);
     }
 
     private void addGuiComponents() {
